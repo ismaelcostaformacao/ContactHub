@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt">
+<body>
+
+<div id="cookie" style="
+  position:fixed;bottom:10px;left:10px;right:10px;
+  background:#111;color:#fff;padding:10px;display:none">
+  Este site usa cookies. Ao clicar em "Aceitar" ou "Recusar" está a dar o seu consentimento para o uso de cookies.
+  <button onclick="setConsent('ok')">Aceitar</button>
+  <button onclick="setConsent('no')">Recusar</button>
+</div>
+
+<script>
+  const KEY = "cookieConsent";
+
+  function setConsent(v){
+    document.cookie = KEY+"="+v+";max-age=2592000;path=/";
+    document.getElementById("cookie").style.display="none";
+  }
+
+  function hasConsent(){
+    return document.cookie.includes(KEY+"=");
+  }
+
+  if(!hasConsent()){
+    document.getElementById("cookie").style.display="block";
+  }
+</script>
+
+</body>
+</html>
