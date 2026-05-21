@@ -1,0 +1,212 @@
+/* Variaveis globais de cor e tokens visuais da app */
+:root {
+  --bg-main: #f5f8ff;
+  --bg-soft: #ecf2ff;
+  --surface: #ffffff;
+  --nav-bg: rgba(12, 36, 76, 0.94);
+  --text-main: #1c2a3a;
+  --text-muted: #5e6b7a;
+  --accent: #1479ff;
+  --border-soft: #dbe4f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Estilo base do documento */
+body {
+  font-family: "Outfit", sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(20, 121, 255, 0.14), transparent 35%),
+    radial-gradient(circle at 90% 20%, rgba(10, 207, 131, 0.12), transparent 32%),
+    var(--bg-main);
+}
+
+/* Titulos principais com fonte de destaque */
+h1,
+h2,
+h3,
+.brand-name {
+  font-family: "Sora", sans-serif;
+}
+
+/* Navbar fixa com efeito de vidro e sombra */
+.app-navbar {
+  background: var(--nav-bg);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 26px rgba(5, 23, 55, 0.24);
+}
+
+/* Logotipo e nome da marca */
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.brand-name {
+  color: #f8fbff;
+  font-size: 17px;
+}
+
+/* Links de navegacao no menu */
+.navbar .nav-link {
+  color: #d8e7ff;
+  font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: #ffffff;
+}
+
+/* Personalizacao do botao hamburguer em mobile */
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* Hero com gradiente e espacamento generoso */
+.hero-section {
+  padding: 88px 0 64px;
+  color: #ffffff;
+  background: linear-gradient(130deg, #0d2c5b 0%, #0f4f85 48%, #0e688e 100%);
+}
+
+/* Etiqueta pequena acima do titulo principal */
+.hero-label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  margin-bottom: 13px;
+  color: #9dc6ff;
+}
+
+.hero-section h1 {
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.hero-text {
+  color: #d8e7ff;
+  max-width: 720px;
+}
+
+/* Card do hero com contraste sobre o fundo escuro */
+.hero-card {
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #ffffff, #f2f7ff);
+  box-shadow: 0 16px 40px rgba(7, 25, 55, 0.3);
+}
+
+/* Lista reutilizavel para pontos curtos */
+.app-list {
+  padding-left: 16px;
+}
+
+.app-list li {
+  margin-bottom: 8px;
+}
+
+/* Blocos de secao para manter ritmo vertical */
+.section-space {
+  padding: 67px 0;
+}
+
+/* Fundo alternado entre secoes para separar conteudos */
+.section-soft {
+  background: var(--bg-soft);
+  border-top: 1px solid rgba(20, 121, 255, 0.08);
+  border-bottom: 1px solid rgba(20, 121, 255, 0.08);
+}
+
+/* Titulos e subtitulos de secao */
+.section-title {
+  margin-bottom: 5px;
+  font-size: 28px;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+}
+
+/* Estilo base de cards reutilizados na pagina */
+.value-card,
+.chart-card,
+.info-card,
+.map-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(7, 22, 46, 0.08);
+}
+
+/* Rotulo pequeno de metrica */
+.value-label {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+/* Separador visual entre imagem e texto nos cards de grafico */
+.chart-card img {
+  border-bottom: 1px solid var(--border-soft);
+  background: #f9fbff;
+}
+
+/* iframe responsivo para o Google Maps */
+.map-card iframe {
+  width: 100%;
+  min-height: 360px;
+  border: 0;
+  border-radius: 16px;
+}
+
+/* Evita quebra de texto no cabecalho da tabela */
+.table thead th {
+  white-space: nowrap;
+}
+
+/* Rodape simples e legivel */
+.app-footer {
+  padding: 20px 0;
+  color: #d8e7ff;
+  background: #0c244c;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Ajustes para tablets e portateis pequenos */
+@media (max-width: 991px) {
+  .hero-section {
+    padding: 70px 0 54px;
+  }
+
+  .map-card iframe {
+    min-height: 320px;
+  }
+}
+
+/* Ajustes finais para telemoveis */
+@media (max-width: 575px) {
+  .section-space {
+    padding: 51px 0;
+  }
+
+  .hero-section {
+    padding: 64px 0 48px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+}
