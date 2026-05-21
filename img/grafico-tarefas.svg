@@ -1,0 +1,14 @@
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="520" rx="28" fill="#F8FBFF"/>
+  <rect x="72" y="80" width="380" height="28" rx="14" fill="#D7E6FE"/>
+  <rect x="72" y="128" width="290" height="18" rx="9" fill="#E8F1FF"/>
+  <circle cx="355" cy="300" r="138" fill="#EAF3FF"/>
+  <path d="M355 300L355 162C430 162 491 223 491 300H355Z" fill="#1479FF"/>
+  <path d="M355 300L491 300C491 361 450 413 394 431L355 300Z" fill="#45A4FF"/>
+  <path d="M355 300L394 431C367 439 342 439 314 431L355 300Z" fill="#79C3FF"/>
+  <path d="M355 300L314 431C255 413 219 360 219 300H355Z" fill="#9ED7FF"/>
+  <text x="560" y="235" fill="#375272" font-size="26" font-family="Arial">Alta: 38%</text>
+  <text x="560" y="275" fill="#375272" font-size="26" font-family="Arial">Media: 26%</text>
+  <text x="560" y="315" fill="#375272" font-size="26" font-family="Arial">Baixa: 20%</text>
+  <text x="560" y="355" fill="#375272" font-size="26" font-family="Arial">Concluidas: 16%</text>
+</svg>
