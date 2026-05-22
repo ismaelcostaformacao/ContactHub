@@ -1,8 +1,9 @@
-# 📇 ContactHub  
+# 📇 ContactHub
 
 O **ContactHub** é uma solução web eficiente, segura e escalável, desenvolvida para permitir o **registo, consulta, atualização e remoção de contatos pessoais e profissionais**.  
 Este documento apresenta o **contexto**, **objetivos**, **funcionalidades**, **arquitetura**, **tecnologias previstas** e os **artefactos essenciais** que orientam o desenvolvimento do sistema.
 
+---
 ---
 
 ## 📘 Descrição do Projeto
