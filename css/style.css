@@ -41,9 +41,8 @@ h3,
 
 /* Logotipo e nome da marca */
 .brand-logo {
-  width: 42px;
   height: 42px;
-  border-radius: 10px;
+  border-radius: 2px;
   object-fit: cover;
 }
 

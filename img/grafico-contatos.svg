@@ -1,0 +1,15 @@
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="520" rx="28" fill="#F8FBFF"/>
+  <rect x="72" y="80" width="360" height="28" rx="14" fill="#D8E7FF"/>
+  <rect x="72" y="128" width="250" height="18" rx="9" fill="#E8F1FF"/>
+  <line x1="96" y1="420" x2="804" y2="420" stroke="#BFD4EF" stroke-width="2"/>
+  <line x1="96" y1="188" x2="96" y2="420" stroke="#BFD4EF" stroke-width="2"/>
+  <rect x="170" y="260" width="100" height="160" rx="12" fill="#7DB5FF"/>
+  <rect x="322" y="220" width="100" height="200" rx="12" fill="#4C95FF"/>
+  <rect x="474" y="180" width="100" height="240" rx="12" fill="#1479FF"/>
+  <rect x="626" y="290" width="100" height="130" rx="12" fill="#9CC7FF"/>
+  <text x="200" y="455" fill="#4A5D73" font-size="24" font-family="Arial">Cliente</text>
+  <text x="344" y="455" fill="#4A5D73" font-size="24" font-family="Arial">Prospect</text>
+  <text x="520" y="455" fill="#4A5D73" font-size="24" font-family="Arial">Parceiro</text>
+  <text x="652" y="455" fill="#4A5D73" font-size="24" font-family="Arial">Outro</text>
+</svg>
