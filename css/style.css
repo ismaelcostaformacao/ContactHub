@@ -119,7 +119,7 @@ h3,
 }
 
 /* Blocos de secao para manter ritmo vertical */
-.section-space {
+.section-space, .container {
   padding: 100px 0;
 }
 
