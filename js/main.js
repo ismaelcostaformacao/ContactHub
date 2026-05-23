@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
   initContactCRUD();
   updateContactTable();
   updateDashboard();
+  
+  // Expor funções globalmente para acesso via onclick no HTML
+  window.editContact = editContact;
+  window.deleteContact = deleteContact;
 });
 
 /**
@@ -137,19 +141,35 @@ function setupContactForm() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Obter valores do formulário
+    // Verificar se está em modo de edição
+    if (form.dataset.editingId) {
+      const editingId = parseInt(form.dataset.editingId);
+      const success = saveEdit(editingId);
+      
+      if (success) {
+        // Resetar formulário e fechar modal
+        form.reset();
+        cancelEdit();
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('contactoModal'));
+        if (modal) modal.hide();
+        
+        showNotification('Contacto atualizado com sucesso!', 'success');
+      }
+      return;
+    }
+    
+    // Criar novo contacto
     const novoContacto = {
       id: Date.now(), // ID único baseado em timestamp
       nome: document.getElementById('contactoNome').value.trim(),
       empresa: document.getElementById('contactoEmpresa').value.trim(),
       email: document.getElementById('contactoEmail').value.trim(),
       telefone: document.getElementById('contactoTelefone').value.trim(),
-      morada: document.getElementById('contactoMorada')?.value.trim() || '',
-      cidade: document.getElementById('contactoCidade')?.value.trim() || '',
-      estado: document.getElementById('contactoEstado').value,
-      categoria: document.getElementById('contactoCategoria').value,
       prioridade: document.getElementById('contactoPrioridade').value,
+      categoria: capitalizeFirst(document.getElementById('contactoCategoria').value),
       notas: document.getElementById('contactoNotas')?.value.trim() || '',
+      estado: 'Novo', // Estado padrão para novos contactos
       dataCriacao: new Date().toISOString().split('T')[0]
     };
     
@@ -176,63 +196,89 @@ function editContact(id) {
   const contacts = getContacts();
   const contacto = contacts.find(c => c.id === id);
   
-  if (!contacto) return;
+  if (!contacto) {
+    showNotification('Contacto não encontrado!', 'danger');
+    return;
+  }
   
   // Preencher formulário com dados do contacto
-  document.getElementById('contactoNome').value = contacto.nome;
-  document.getElementById('contactoEmpresa').value = contacto.empresa;
-  document.getElementById('contactoEmail').value = contacto.email;
-  document.getElementById('contactoTelefone').value = contacto.telefone;
-  if (document.getElementById('contactoMorada')) {
-    document.getElementById('contactoMorada').value = contacto.morada || '';
-  }
-  if (document.getElementById('contactoCidade')) {
-    document.getElementById('contactoCidade').value = contacto.cidade || '';
-  }
-  document.getElementById('contactoEstado').value = contacto.estado;
-  document.getElementById('contactoCategoria').value = contacto.categoria;
-  document.getElementById('contactoPrioridade').value = contacto.prioridade;
+  document.getElementById('contactoNome').value = contacto.nome || '';
+  document.getElementById('contactoEmpresa').value = contacto.empresa || '';
+  document.getElementById('contactoEmail').value = contacto.email || '';
+  document.getElementById('contactoTelefone').value = contacto.telefone || '';
+  document.getElementById('contactoPrioridade').value = contacto.prioridade || '3';
+  document.getElementById('contactoCategoria').value = (contacto.categoria || '').toLowerCase();
   if (document.getElementById('contactoNotas')) {
     document.getElementById('contactoNotas').value = contacto.notas || '';
   }
+  
+  // Atualizar título do modal
+  document.getElementById('contactoModalLabel').textContent = 'Editar contacto';
   
   // Abrir modal
   const modal = new bootstrap.Modal(document.getElementById('contactoModal'));
   modal.show();
   
-  // Remover listener antigo e adicionar novo para atualização
+  // Guardar ID do contacto a editar num atributo data no form
   const form = document.getElementById('contactoForm');
-  const oldSubmitHandler = form.onsubmit;
-  form.onsubmit = function(e) {
-    e.preventDefault();
+  form.dataset.editingId = id;
+  
+  // Mostrar botão de cancelar edição
+  let cancelBtn = document.getElementById('cancelEditBtn');
+  if (!cancelBtn) {
+    cancelBtn = document.createElement('button');
+    cancelBtn.id = 'cancelEditBtn';
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'btn btn-outline-secondary';
+    cancelBtn.textContent = 'Cancelar edição';
+    cancelBtn.style.display = 'none';
     
-    // Atualizar contacto
-    contacto.nome = document.getElementById('contactoNome').value.trim();
-    contacto.empresa = document.getElementById('contactoEmpresa').value.trim();
-    contacto.email = document.getElementById('contactoEmail').value.trim();
-    contacto.telefone = document.getElementById('contactoTelefone').value.trim();
-    if (document.getElementById('contactoMorada')) {
-      contacto.morada = document.getElementById('contactoMorada').value.trim();
-    }
-    if (document.getElementById('contactoCidade')) {
-      contacto.cidade = document.getElementById('contactoCidade').value.trim();
-    }
-    contacto.estado = document.getElementById('contactoEstado').value;
-    contacto.categoria = document.getElementById('contactoCategoria').value;
-    contacto.prioridade = document.getElementById('contactoPrioridade').value;
-    if (document.getElementById('contactoNotas')) {
-      contacto.notas = document.getElementById('contactoNotas').value.trim();
-    }
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.parentNode.insertBefore(cancelBtn, submitBtn);
     
-    saveContacts(contacts);
-    
-    // Resetar formulário e fechar modal
-    form.reset();
-    form.onsubmit = oldSubmitHandler;
-    modal.hide();
-    
-    showNotification('Contacto atualizado com sucesso!', 'success');
-  };
+    cancelBtn.addEventListener('click', function() {
+      cancelEdit();
+    });
+  }
+  cancelBtn.style.display = 'inline-block';
+}
+
+function cancelEdit() {
+  const form = document.getElementById('contactoForm');
+  delete form.dataset.editingId;
+  
+  document.getElementById('contactoModalLabel').textContent = 'Registo de novo contacto';
+  
+  const cancelBtn = document.getElementById('cancelEditBtn');
+  if (cancelBtn) {
+    cancelBtn.style.display = 'none';
+  }
+  
+  form.reset();
+}
+
+function saveEdit(id) {
+  const contacts = getContacts();
+  const index = contacts.findIndex(c => c.id === id);
+  
+  if (index === -1) {
+    showNotification('Contacto não encontrado!', 'danger');
+    return false;
+  }
+  
+  // Atualizar contacto
+  contacts[index].nome = document.getElementById('contactoNome').value.trim();
+  contacts[index].empresa = document.getElementById('contactoEmpresa').value.trim();
+  contacts[index].email = document.getElementById('contactoEmail').value.trim();
+  contacts[index].telefone = document.getElementById('contactoTelefone').value.trim();
+  contacts[index].prioridade = document.getElementById('contactoPrioridade').value;
+  contacts[index].categoria = capitalizeFirst(document.getElementById('contactoCategoria').value);
+  if (document.getElementById('contactoNotas')) {
+    contacts[index].notas = document.getElementById('contactoNotas').value.trim();
+  }
+  
+  saveContacts(contacts);
+  return true;
 }
 
 function deleteContact(id) {
@@ -269,12 +315,12 @@ function updateContactTable() {
       <td>${escapeHtml(contacto.email)}</td>
       <td><span class="badge ${getEstadoBadgeClass(contacto.estado)}">${escapeHtml(contacto.estado)}</span></td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick="editContact(${contacto.id})" title="Editar">
+        <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editContact(${contacto.id})" title="Editar">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
           </svg>
         </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="deleteContact(${contacto.id})" title="Eliminar">
+        <button class="btn btn-sm btn-outline-danger" onclick="window.deleteContact(${contacto.id})" title="Eliminar">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6ZM14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
           </svg>
@@ -318,6 +364,11 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function capitalizeFirst(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 function showNotification(message, type = 'info') {
